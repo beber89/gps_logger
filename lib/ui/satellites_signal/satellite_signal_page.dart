@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gps_logger/data/repository/satellite_signal_repository.dart';
 
 class SatelliteSignalPage extends StatefulWidget {
   @override
@@ -10,13 +9,10 @@ class SatelliteSignalPage extends StatefulWidget {
 }
 
 class _SatelliteSignalPageState extends State<SatelliteSignalPage> {
-  double snr = -2;
-  SatelliteSignalRepository repo = SatelliteSignalRepository();
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    repo.init();
   }
 
   @override
@@ -30,17 +26,12 @@ class _SatelliteSignalPageState extends State<SatelliteSignalPage> {
       body: Column(
         children: <Widget>[
           Row(
-            children: <Widget>[Text("Sat1"), Text(snr.toString())],
+            children: <Widget>[Text("Sat1")],
           )
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => repo.getSatellites().then((num) {
-              setState(() {
-                snr = num;
-              });
-            }),
-      ),
+        onPressed: () {})
     );
   }
 }

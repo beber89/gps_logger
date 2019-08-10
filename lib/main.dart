@@ -1,7 +1,14 @@
 // Recent TODO:
-//TODO:
-// [ ] Use Geolocator for now then create Gpsy for satellites later
+// locator_repository_test.dart
 
+//TODO:
+// [x] Create Model for Location
+// [x] Create Wrapper for Geolocator
+// [ ] Create LocatorRepositoryTest
+// [ ] Create LocatorRepository
+// [ ] Create LocatorStateTest
+// [ ] Create Locator events and states
+//  [ ] Put in mind that live updates are required
 //FIXME: 
 
 // NOTE:
