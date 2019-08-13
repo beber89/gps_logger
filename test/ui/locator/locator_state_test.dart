@@ -8,7 +8,8 @@ void main() {
   group('LocatorState ', () {
     LocatorState initial;
     LocatorState loading;
-    LocatorState success;
+    LocatorState positionSuccess;
+    LocatorState directionSuccess;
     LocatorState failure;
 
     setUp(() {
@@ -21,7 +22,8 @@ void main() {
 
       initial = LocatorState.initial();
       loading = LocatorState.loading();
-      success = LocatorState.success(pos);
+      positionSuccess = LocatorState.positionSuccess(pos);
+      directionSuccess = LocatorState.directionSuccess(1.0);
       failure = LocatorState.failure('Test error');
     });
 
@@ -30,18 +32,31 @@ void main() {
       () {
         expect(initial.isInitial, true);
         expect(loading.isInitial, false);
-        expect(success.isInitial, false);
+        expect(positionSuccess.isInitial, false);
+        expect(directionSuccess.isInitial, false);
         expect(failure.isInitial, false);
       },
     );
 
     test(
-      'isSuccessful returns true only when instantiated with success factory',
+      'isSuccessfulPosition returns true only when instantiated with success factory',
       () {
-        expect(initial.isSuccessful, false);
-        expect(loading.isSuccessful, false);
-        expect(success.isSuccessful, true);
-        expect(failure.isSuccessful, false);
+        expect(initial.isSuccessfulPosition, false);
+        expect(loading.isSuccessfulPosition, false);
+        expect(positionSuccess.isSuccessfulPosition, true);
+        expect(directionSuccess.isSuccessfulPosition, false);
+        expect(failure.isSuccessfulPosition, false);
+      },
+    );
+
+    test(
+      'isSuccessfulDirection returns true only when instantiated with success factory',
+      () {
+        expect(initial.isSuccessfulDirection, false);
+        expect(loading.isSuccessfulDirection, false);
+        expect(positionSuccess.isSuccessfulDirection, false);
+        expect(directionSuccess.isSuccessfulDirection, true);
+        expect(failure.isSuccessfulDirection, false);
       },
     );
   });

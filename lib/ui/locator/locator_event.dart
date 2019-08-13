@@ -26,3 +26,13 @@ abstract class NewLocatorValueEvent extends LocatorEvent
       _$NewLocatorValueEvent;
 }
 
+abstract class NewDirectionValueEvent extends LocatorEvent
+    implements Built<NewDirectionValueEvent, NewDirectionValueEventBuilder> {
+  double get direction;
+
+  NewDirectionValueEvent._();
+
+  factory NewDirectionValueEvent([updates(NewDirectionValueEventBuilder b)]) =
+      _$NewDirectionValueEvent;
+}
+

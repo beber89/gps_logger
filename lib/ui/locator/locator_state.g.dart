@@ -13,11 +13,14 @@ class _$LocatorState extends LocatorState {
   final bool isFailure;
   @override
   final PositionLocation position;
+  @override
+  final double direction;
 
   factory _$LocatorState([void Function(LocatorStateBuilder) updates]) =>
       (new LocatorStateBuilder()..update(updates)).build();
 
-  _$LocatorState._({this.isLoading, this.isFailure, this.position})
+  _$LocatorState._(
+      {this.isLoading, this.isFailure, this.position, this.direction})
       : super._() {
     if (isLoading == null) {
       throw new BuiltValueNullFieldError('LocatorState', 'isLoading');
@@ -43,13 +46,16 @@ class _$LocatorState extends LocatorState {
     return other is LocatorState &&
         isLoading == other.isLoading &&
         isFailure == other.isFailure &&
-        position == other.position;
+        position == other.position &&
+        direction == other.direction;
   }
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, isLoading.hashCode), isFailure.hashCode),
-        position.hashCode));
+    return $jf($jc(
+        $jc($jc($jc(0, isLoading.hashCode), isFailure.hashCode),
+            position.hashCode),
+        direction.hashCode));
   }
 
   @override
@@ -57,7 +63,8 @@ class _$LocatorState extends LocatorState {
     return (newBuiltValueToStringHelper('LocatorState')
           ..add('isLoading', isLoading)
           ..add('isFailure', isFailure)
-          ..add('position', position))
+          ..add('position', position)
+          ..add('direction', direction))
         .toString();
   }
 }
@@ -79,6 +86,10 @@ class LocatorStateBuilder
       _$this._position ??= new PositionLocationBuilder();
   set position(PositionLocationBuilder position) => _$this._position = position;
 
+  double _direction;
+  double get direction => _$this._direction;
+  set direction(double direction) => _$this._direction = direction;
+
   LocatorStateBuilder();
 
   LocatorStateBuilder get _$this {
@@ -86,6 +97,7 @@ class LocatorStateBuilder
       _isLoading = _$v.isLoading;
       _isFailure = _$v.isFailure;
       _position = _$v.position?.toBuilder();
+      _direction = _$v.direction;
       _$v = null;
     }
     return this;
@@ -112,7 +124,8 @@ class LocatorStateBuilder
           new _$LocatorState._(
               isLoading: isLoading,
               isFailure: isFailure,
-              position: position.build());
+              position: position.build(),
+              direction: direction);
     } catch (_) {
       String _$failedField;
       try {

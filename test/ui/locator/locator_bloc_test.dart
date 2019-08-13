@@ -12,13 +12,20 @@ import 'package:rxdart/rxdart.dart';
  }
 
  void main() {
-      BehaviorSubject<PositionLocation> positionSubject = BehaviorSubject<PositionLocation>();
+   BehaviorSubject<PositionLocation> positionSubject;
+      BehaviorSubject<double> directionSubject;
   LocatorBloc locatorBloc;
   _MockRepository _mockRepository;
 
    setUp(() {
     _mockRepository = _MockRepository();
     locatorBloc = LocatorBloc(_mockRepository);
+    positionSubject = BehaviorSubject<PositionLocation>();
+    directionSubject = BehaviorSubject<double>();
+  });
+  tearDown((){
+    positionSubject.close();
+    directionSubject.close();
   });
 
    test('initial state is correct', () {
@@ -31,14 +38,15 @@ import 'package:rxdart/rxdart.dart';
      ..longitude=30.1
      ..timestamp=DateTime.fromMillisecondsSinceEpoch(10000)
      );
-     test('emits [initial, loading, successful] ', () async {
+     test('emits [initial, loading, positionSuccess] ', () async {
        when(_mockRepository.positionStream).thenAnswer((_) => positionSubject.stream) ;
+       when(_mockRepository.directionStream).thenAnswer((_) => directionSubject.stream) ;
       
 
        final expectedResult = [
         LocatorState.initial(),
         LocatorState.loading(),
-        LocatorState.success(pos) ,
+        LocatorState.positionSuccess(pos) ,
       ];
 
        expectLater(
@@ -46,21 +54,22 @@ import 'package:rxdart/rxdart.dart';
         emitsInOrder(expectedResult),
       );
       locatorBloc.start();
-      Future.delayed(Duration(milliseconds: 3000)).then((_) {
+      Future.delayed(Duration(milliseconds: 2000)).then((_) {
         positionSubject.sink.add(pos);
       });
       
     });
 
 
-    test('emits [initial, loading, successful, initial] ', () async {
+    test('emits [initial, loading, positionSuccess, initial] ', () async {
        when(_mockRepository.positionStream).thenAnswer((_) => positionSubject.stream) ;
+       when(_mockRepository.directionStream).thenAnswer((_) => directionSubject.stream) ;
       
 
        final expectedResult = [
         LocatorState.initial(),
         LocatorState.loading(),
-        LocatorState.success(pos) ,
+        LocatorState.positionSuccess(pos) ,
         LocatorState.initial(),
       ];
 
@@ -69,12 +78,37 @@ import 'package:rxdart/rxdart.dart';
         emitsInOrder(expectedResult),
       );
       locatorBloc.start();
-      Future.delayed(Duration(milliseconds: 3000)).then((_)=>
+      Future.delayed(Duration(milliseconds: 2000)).then((_)=>
         positionSubject.sink.add(pos)
       );
-      Future.delayed(Duration(milliseconds: 6000)).then((_){
+      Future.delayed(Duration(milliseconds: 3000)).then((_){
         locatorBloc.end();
-        positionSubject.close();
+      });
+      
+    });
+
+    test('emits [initial, loading, directionSuccess, initial] ', () async {
+      when(_mockRepository.positionStream).thenAnswer((_) => positionSubject.stream) ;
+       when(_mockRepository.directionStream).thenAnswer((_) => directionSubject.stream) ;
+      
+
+       final expectedResult = [
+        LocatorState.initial(),
+        LocatorState.loading(),
+        LocatorState.directionSuccess(1.3) ,
+        LocatorState.initial(),
+      ];
+
+       expectLater(
+        locatorBloc.state,
+        emitsInOrder(expectedResult),
+      );
+      locatorBloc.start();
+      Future.delayed(Duration(milliseconds: 2000)).then((_)=>
+        directionSubject.sink.add(1.3)
+      );
+      Future.delayed(Duration(milliseconds: 3000)).then((_){
+        locatorBloc.end();
       });
       
     });

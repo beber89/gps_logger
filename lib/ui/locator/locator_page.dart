@@ -13,6 +13,8 @@ class LocatorPage extends StatefulWidget {
 
 class _LocatorPageState extends State<LocatorPage> {
   final _locatorBloc = kiwi.Container().resolve<LocatorBloc>();
+  double _direction;
+  String _coords = "";
 
   @override
   void initState() {
@@ -37,14 +39,22 @@ class _LocatorPageState extends State<LocatorPage> {
   }
 
   Widget _buildLiveCoordsPage(LocatorState state) {
-    var coords = state.position.longitude.toString()+"E\n"
-    +state.position.latitude.toString()+"N";
+    if (state.isSuccessfulDirection) {
+      _direction = state.direction;
+    } else {
+      _coords = state.position.longitude.toString() +
+          "E\n" +
+          state.position.latitude.toString() +
+          "N";
+    }
     return Column(
       children: <Widget>[
         SizedBox(
           height: 30,
         ),
-        CustomPaint(size: Size(300, 300), painter: _CompassPainter(coords)),
+        CustomPaint(
+            size: Size(300, 300),
+            painter: _CompassPainter(_coords, _direction * -1 * math.pi / 180)),
         SizedBox(
           height: 40,
         ),
@@ -66,7 +76,7 @@ class _LocatorPageState extends State<LocatorPage> {
         bloc: _locatorBloc,
         builder: (BuildContext context, LocatorState state) {
           print(state);
-          if (state.isSuccessful) {
+          if (state.isSuccessfulPosition || state.isSuccessfulDirection) {
             return _buildLiveCoordsPage(state);
           } else if (state.isLoading) {
             return Center(child: CircularProgressIndicator());
@@ -87,12 +97,12 @@ class GeometryHelper {
 }
 
 class _CompassPainter extends CustomPainter {
-  String coords = "";
-  double theta = 0.0;
-  _CompassPainter(this.coords);
+  String coords;
+  double theta;
+  _CompassPainter(this.coords, this.theta);
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.translate(size.width/2, size.height/2);
+    canvas.translate(size.width / 2, size.height / 2);
     canvas.rotate(theta);
     Paint line = Paint()
       ..color = Color.fromARGB(127, 255, 0, 0)
@@ -135,8 +145,8 @@ class _CompassPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_CompassPainter oldDelegate) =>
-    // TODO: implement shouldRepaint
-    oldDelegate.coords != coords || oldDelegate.theta != theta;
+      // TODO: implement shouldRepaint
+      oldDelegate.coords != coords || oldDelegate.theta != theta;
 
   ui.Paragraph writeLabel(String s,
       [double width = 30.0, TextAlign align = TextAlign.left]) {

@@ -2,8 +2,8 @@
 // locator_repository_test.dart
 
 //TODO:
-// [ ] git commit
-// [ ] implement compass and view
+// [ ] Understand phone compass and angles
+// [x] implement compass and view
 // [x] Create Model for Location
 // [x] Create Wrapper for Geolocator
 // [x] Create LocatorRepositoryTest
@@ -12,6 +12,7 @@
 // [x] Create Locator events and states
 //  [x] Put in mind that live updates are required
 //FIXME: 
+// [ ] Compass not rotating properly
 
 // NOTE:
 

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gps_logger/data/model/locator/position_location.dart';
 
@@ -13,6 +14,8 @@ class GeolocatorWrapper {
       .transform<PositionLocation>(StreamTransformer.fromHandlers(
           handleData: (Position p, EventSink sink) =>
               sink.add(positionLocationFromPosition(p))));
+  Stream<double> get directionStream => 
+  FlutterCompass.events;
 
   static positionLocationFromPosition(Position p) => PositionLocation((b) => b
     ..longitude = p.longitude

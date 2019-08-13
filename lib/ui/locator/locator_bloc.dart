@@ -8,7 +8,7 @@ import 'package:gps_logger/ui/locator/locator.dart';
 class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
   LocatorRepository _locatorRepository;
   LocatorBloc(this._locatorRepository);
-  StreamSubscription _subscription;
+  StreamSubscription _positionSubscription, _directionSubscription;
 
   void start() {
     dispatch(StartListeningEvent());
@@ -16,6 +16,10 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
 
   void newPositionLocation(PositionLocation p) {
     dispatch(NewLocatorValueEvent((b)=>b..position.replace(p)));
+  }
+
+  void newDirectionCompass(double d) {
+    dispatch(NewDirectionValueEvent((b)=>b..direction=d));
   }
   void end() {
     dispatch(EndListeningEvent());
@@ -28,16 +32,27 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
       LocatorState currentState, LocatorEvent event) async* {
     if (event is StartListeningEvent) {
       yield LocatorState.loading();
-      _subscription = _locatorRepository.positionStream
+      _positionSubscription = _locatorRepository.positionStream
       .listen((PositionLocation p){
         newPositionLocation(p);
       }) ;
+      _directionSubscription = _locatorRepository.directionStream
+      .listen((double d)=>newDirectionCompass(d));
     } else if (event is NewLocatorValueEvent) {
       PositionLocation position = event.position;
-      yield LocatorState.success(position);
+      yield LocatorState.positionSuccess(position);
+    } else if (event is NewDirectionValueEvent) {
+      double direction = event.direction;
+      yield LocatorState.directionSuccess(direction);
     } else if (event is EndListeningEvent) {
-      await _subscription.cancel();
-      yield LocatorState.initial();
+      try {
+        await _positionSubscription.cancel().timeout(Duration(milliseconds: 1000));
+        await _directionSubscription.cancel().timeout(Duration(milliseconds: 1000));
+      } on TimeoutException catch(e) {
+        print(e);
+      } finally {
+        yield LocatorState.initial();
+      }
     }
   }
 }
