@@ -2,23 +2,27 @@
 // locator_repository_test.dart
 
 //TODO:
+// [ ] git commit
+// [ ] implement compass and view
 // [x] Create Model for Location
 // [x] Create Wrapper for Geolocator
-// [ ] Create LocatorRepositoryTest
-// [ ] Create LocatorRepository
-// [ ] Create LocatorStateTest
-// [ ] Create Locator events and states
-//  [ ] Put in mind that live updates are required
+// [x] Create LocatorRepositoryTest
+// [x] Create LocatorRepository
+// [x] Create LocatorStateTest
+// [x] Create Locator events and states
+//  [x] Put in mind that live updates are required
 //FIXME: 
 
 // NOTE:
 
 
 import 'package:flutter/material.dart';
+import 'package:gps_logger/injection_container.dart';
 import 'package:gps_logger/ui/home/home_page.dart';
-import 'package:gps_logger/ui/satellites_signal/satellite_signal_page.dart';
+import 'package:gps_logger/ui/locator/locator_page.dart';
 
 void main() { 
+  initKiwi();
   runApp(MyApp());
 }
 
@@ -40,7 +44,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: SatelliteSignalPage(),
+      home: LocatorPage(),
     );
   }
 }

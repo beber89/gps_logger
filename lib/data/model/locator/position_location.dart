@@ -22,6 +22,9 @@ abstract class PositionLocation
   @nullable double get speed;
   @nullable double get speedAccuracy;
 
+  bool get isInitial => longitude == 0.0 && latitude == 0.0 
+  && timestamp.compareTo(DateTime.fromMillisecondsSinceEpoch(0)) == 0;
+
   PositionLocation._();
 
 
