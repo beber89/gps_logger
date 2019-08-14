@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:gps_logger/ui/drawer/drawer_page.dart';
 import 'package:gps_logger/ui/locator/locator.dart';
 import 'package:kiwi/kiwi.dart' as kiwi;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -72,6 +73,7 @@ class _LocatorPageState extends State<LocatorPage> {
       appBar: AppBar(
         title: Text("LocatorPage"),
       ),
+      drawer: DrawerPage(),
       body: BlocBuilder(
         bloc: _locatorBloc,
         builder: (BuildContext context, LocatorState state) {
@@ -146,7 +148,8 @@ class _CompassPainter extends CustomPainter {
   @override
   bool shouldRepaint(_CompassPainter oldDelegate) =>
       // TODO: implement shouldRepaint
-      oldDelegate.coords != coords || oldDelegate.theta != theta;
+      oldDelegate.coords != coords 
+      || math.pow(oldDelegate.theta - theta,2) > 0.03;
 
   ui.Paragraph writeLabel(String s,
       [double width = 30.0, TextAlign align = TextAlign.left]) {

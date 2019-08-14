@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:gps_logger/data/model/model.dart';
 import 'dart:async';
-
+import 'dart:math' as math;
 import 'package:gps_logger/data/repository/locator_repository.dart';
 import 'package:gps_logger/ui/locator/locator.dart';
 
@@ -9,6 +9,7 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
   LocatorRepository _locatorRepository;
   LocatorBloc(this._locatorRepository);
   StreamSubscription _positionSubscription, _directionSubscription;
+  double _oldDirection;
 
   void start() {
     dispatch(StartListeningEvent());
@@ -37,7 +38,14 @@ class LocatorBloc extends Bloc<LocatorEvent, LocatorState> {
         newPositionLocation(p);
       }) ;
       _directionSubscription = _locatorRepository.directionStream
-      .listen((double d)=>newDirectionCompass(d));
+      .listen((double d){
+        if(_oldDirection == null 
+        || ((d-_oldDirection).abs() > 0.17*180/math.pi) 
+        &&  (360-d+_oldDirection).abs() < 0.17*180/math.pi){
+          _oldDirection = d;
+          newDirectionCompass(d);
+        }
+      });
     } else if (event is NewLocatorValueEvent) {
       PositionLocation position = event.position;
       yield LocatorState.positionSuccess(position);

@@ -1,8 +1,11 @@
 // Recent TODO:
-// locator_repository_test.dart
+// 
 
 //TODO:
-// [ ] Understand phone compass and angles
+// [ ] Create locations list 
+// [ ] Implement saving location functionality
+// [ ] Add a setting view showing coords format
+// [ ] Implement a DisplayPositionValue containing enum for chosen format
 // [x] implement compass and view
 // [x] Create Model for Location
 // [x] Create Wrapper for Geolocator
@@ -13,6 +16,7 @@
 //  [x] Put in mind that live updates are required
 //FIXME: 
 // [ ] Compass not rotating properly
+//   [ ] Understand phone compass and angles
 
 // NOTE:
 
@@ -45,7 +49,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LocatorPage(),
+      routes: {
+            '/': (BuildContext context) => LocatorPage(),
+            '/locations': (BuildContext context) => Container(),
+          },
     );
   }
 }
